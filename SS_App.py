@@ -24,7 +24,10 @@ def populate():
     for i in range(count):
         txt = "Please enter the name of participant #{}: "
         participant = str(input(txt.format(i + 1)))
-        participants.append(participant)
+        if participant.lower() == "exit":
+            break
+        else:
+            participants.append(participant)
 
     print("\nYou have the following people listed as participants: ")
     for i in participants:
@@ -40,9 +43,9 @@ def pool():
     print()
 
 #ADD command, see help()
-def add():
+def add(name):
     global participants
-    add_participant = str(input("Please enter the name to be added: "))
+    add_participant = name
     if add_participant not in participants:
         participants.append(add_participant)
         txt = "You have added {} to the list of participants."
@@ -51,10 +54,10 @@ def add():
         txt = "{} is already on the list (no duplicate names allowed)."
         print(txt.format(add_participant))
 
-#REMOVE command, see help()
-def remove():
+#RM command, see help()
+def remove(name):
     global participants
-    rm_participant = str(input("Please enter the name to be removed: "))
+    rm_participant = name
     if rm_participant in participants:
         participants.remove(rm_participant)
         txt = "You have removed {} from the list of participants."
@@ -82,6 +85,7 @@ def assign():
             else:
                 assign()
         else:
+            print("Successfully assigned all secret Santas!")
             break
         
 #Hidden command that shows you the contents of the secret_santa dictionary
@@ -109,11 +113,13 @@ to be reflected in the final outcome.
 
 These are the current commands (and their aliases, if applicable) that you can use:
 
-POPULATE     (POP)   - Will prompt you to enter all the info for your secret Santa pool.
+POPULATE     (POP)   - Will prompt you to enter all the info to populate your secret Santa pool.
                          - This command overwrites all previous information entered.
+                         - Enter "QUIT" if you would like to go back to the command line during
+                         the process
 POOL         (PL)    - Will allow you to see who is currently in your secret Santa pool.
-ADD                  - Will allow you to add an individual to your secret Santa pool.
-REMOVE       (RM)    - Will allow you to remove an individual from your secret Santa pool.
+ADD [name]           - Will allow you to add an individual to your secret Santa pool.
+RM [name]            - Will allow you to remove an individual from your secret Santa pool.
 ASSIGN       (SS)    - Will process your list of participants and assign everyone a secret Santa.
 SHOW [name]          - Will show who the indicated participant is getting gifts for.
                          - The [name] option is mandatory.
@@ -135,10 +141,12 @@ available and their functions if you are not sure how to use this app.
             populate()
         elif command.lower() == "pool" or command.lower() == "pl":
             pool()
-        elif command.lower() == "add":
-            add()
-        elif command.lower() == "remove" or command.lower() == "rm":
-            remove()
+        elif command.lower().startswith("add "):
+            name = command[4:]
+            add(name)
+        elif command.lower().startswith("rm "):
+            name = command[3:]
+            remove(name)
         elif command.lower() == "assign" or command.lower() == "ss":
             assign()
         elif command.lower() == "peak":
