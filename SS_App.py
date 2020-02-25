@@ -1,13 +1,16 @@
 #Vladislav Sereda
 #Secret Santa App
 
+#Imports
 import random
 
+#Global variables
 participants = []
 gifters = []
 giftees = []
 secret_santa = {}
-        
+
+#POPULATE command, see help()
 def populate():
     global participants
     participants.clear()
@@ -28,7 +31,7 @@ def populate():
         print(i, end = " ")
     print()
 
-
+#POOL command, see help()
 def pool():
     global participants
     print("\nYou have the following people listed as participants: ")
@@ -36,6 +39,7 @@ def pool():
         print(i, end = " ")
     print()
 
+#ADD command, see help()
 def add():
     global participants
     add_participant = str(input("Please enter the name to be added: "))
@@ -47,6 +51,7 @@ def add():
         txt = "{} is already on the list (no duplicate names allowed)."
         print(txt.format(add_participant))
 
+#REMOVE command, see help()
 def remove():
     global participants
     rm_participant = str(input("Please enter the name to be removed: "))
@@ -58,6 +63,7 @@ def remove():
         txt = "You couldn't remove {} because they were not in the list."
         print(txt.format(rm_participant))
 
+#ASSIGN command, see help()
 def assign():
     global participants, secret_santa, gifters, giftees
     
@@ -77,20 +83,31 @@ def assign():
                 assign()
         else:
             break
-
+        
+#Hidden command that shows you the contents of the secret_santa dictionary
 def peak():
     print(secret_santa)
 
+#SHOW command, see help()
 def show(gifter):
     giftee = secret_santa.get(gifter)
     txt = "{} is getting gifts for {}, they are {}'s secret Santa!"
     print(txt.format(gifter, giftee, giftee))
 
-    
-
+#HELP command
 def help_prompt():
     print("""
-These are the current commands in this app that you can use:
+The basic process for using this app is:
+1. Use POPULATE to enter a list of participants for your secret Santa party.
+2. Use ASSIGN command to assign everyone their secret Santa.
+3. Have participants use the SHOW command to find out who they're getting gifts for.
+
+- If you make any edits to the participant pool (POPULATE, ADD, REMOVE) *after* you've 
+already used the ASSIGN command, you will have to run it again in order for your updates
+to be reflected in the final outcome. 
+
+
+These are the current commands (and their aliases, if applicable) that you can use:
 
 POPULATE     (POP)   - Will prompt you to enter all the info for your secret Santa pool.
                          - This command overwrites all previous information entered.
@@ -104,7 +121,14 @@ HELP         (H)     - Will show you this prompt in case you forget the commands
 QUIT                 - Will end the application.
 """)
 
-def command_line():
+def main():
+    print("""
+Welcome to my Secret Santa Test App!
+
+I recommend using the HELP command to get a complete list of all commands 
+available and their functions if you are not sure how to use this app.
+""")
+        
     while True:
         command = input("\n> ")
         if command.lower() == "populate" or command.lower() == "pop":
@@ -128,21 +152,5 @@ def command_line():
             break
         else:
             continue
-
-def main():
-
-    print("""
-Welcome to my Secret Santa Test App!
-
-I recommend you begin by using the POPULATE command to create your list of
-Secret Santa participants. Use it again if you would like to start from scratch,
-or use the ADD or REMOVE commands if you just want to make small edits to your
-list. When you're ready, use the ASSIGN command to assign everyone a secret Santa.
-
-Use the HELP command to get a complete list of all commands available and their functions!
-""")
-    
-    command_line()
-
 
 main()
