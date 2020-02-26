@@ -6,8 +6,8 @@ import random
 
 #Global variables
 participants = []
-gifters = []
-giftees = []
+givers = []
+recipients = []
 secret_santa = {}
 
 #POPULATE command, see help()
@@ -68,24 +68,23 @@ def remove(name):
 
 #ASSIGN command, see help()
 def assign():
-    global participants, secret_santa, gifters, giftees
+    global participants, secret_santa, givers, recipients
     
-    gifters = participants.copy()
-    giftees = participants.copy()
+    givers = participants.copy()
+    recipients = participants.copy()
 
     while True:
-        if len(gifters) > 0:
-            gifter = random.choice(gifters)
-            giftee = random.choice(giftees)
+        if len(givers) > 0:
+            giver = random.choice(givers)
+            recipient = random.choice(recipients)
 
-            if gifter != giftee:
-                secret_santa[gifter] = giftee
-                gifters.remove(gifter)
-                giftees.remove(giftee)
+            if giver != recipient:
+                secret_santa[giver] = recipient
+                givers.remove(giver)
+                recipients.remove(recipient)
             else:
                 assign()
         else:
-            print("Successfully assigned all secret Santas!")
             break
         
 #Hidden command that shows you the contents of the secret_santa dictionary
@@ -93,43 +92,65 @@ def peak():
     print(secret_santa)
 
 #SHOW command, see help()
-def show(gifter):
-    giftee = secret_santa.get(gifter)
+def show(giver):
+    recipient = secret_santa.get(giver)
     txt = "{} is getting gifts for {}, they are {}'s secret Santa!"
-    print(txt.format(gifter, giftee, giftee))
+    print(txt.format(giver, recipient, recipient))
+
+#XP command, see help()
+def export(giver):
+    recipient = secret_santa.get(giver)
+    txt = "Hi {}, you will be buying gifts for {}!"
+    
+    ss_file = open(str(giver), "w")
+    ss_file.write(txt.format(giver, recipient))
+    ss_file.close()
+
+#ALL option for the XP command, see help()
+def export_all():
+    txt = "Hi {}, you will be buying gifts for {}!"
+    
+    for giver, recipient in secret_santa.items():
+        recipient = secret_santa.get(giver)
+        
+        ss_file = open(str(giver), "w")
+        ss_file.write(txt.format(giver, recipient))
+        ss_file.close()
 
 #HELP command
 def help_prompt():
     print("""
-The basic process for using this app is:
+The recommended process for using this app is:
 1. Use POPULATE to enter a list of participants for your secret Santa party.
 2. Use ASSIGN command to assign everyone their secret Santa.
 3. Have participants use the SHOW command to find out who they're getting gifts for.
 
 - If you make any edits to the participant pool (POPULATE, ADD, REMOVE) *after* you've 
-already used the ASSIGN command, you will have to run it again in order for your updates
-to be reflected in the final outcome. 
+already used the ASSIGN command, you will have to run the ASSIGN command again in order 
+for your updates to be reflected in the final outcome. 
 
 
 These are the current commands (and their aliases, if applicable) that you can use:
 
-POPULATE     (POP)   - Will prompt you to enter all the info to populate your secret Santa pool.
-                         - This command overwrites all previous information entered.
-                         - Enter "QUIT" if you would like to go back to the command line during
-                         the process
-POOL         (PL)    - Will allow you to see who is currently in your secret Santa pool.
-ADD [name]           - Will allow you to add an individual to your secret Santa pool.
-RM [name]            - Will allow you to remove an individual from your secret Santa pool.
-ASSIGN       (SS)    - Will process your list of participants and assign everyone a secret Santa.
-SHOW [name]          - Will show who the indicated participant is getting gifts for.
-                         - The [name] option is mandatory.
-HELP         (H)     - Will show you this prompt in case you forget the commands.
-QUIT                 - Will end the application.
+POPULATE        (POP)   - Will prompt you to enter all the info to populate your secret Santa pool.
+                             - This command overwrites all previous information entered.
+                             - Enter "QUIT" if you would like to go back to the command line during
+                             the process.
+POOL            (PL)    - Will allow you to see who is currently in your secret Santa pool.
+ADD [name]              - Will allow you to add an individual to your secret Santa pool.
+RM [name]               - Will allow you to remove an individual from your secret Santa pool.
+ASSIGN          (SS)    - Will process your list of participants and assign everyone a secret Santa.
+SHOW [name]             - Will show who the indicated participant is getting gifts for.
+XP [all, name]          - Will export the secret Santa assignment(s) based on the option used.
+                            - Using "XP ALL" will create output files for every participant.
+                            - Using XP [name] will create a single output file for one giver.
+HELP            (H)     - Will show you this prompt in case you forget the commands.
+QUIT                    - Will end the application.
 """)
 
 def main():
     print("""
-Welcome to my Secret Santa Test App!
+Welcome to my Secret Santa App!
 
 I recommend using the HELP command to get a complete list of all commands 
 available and their functions if you are not sure how to use this app.
@@ -154,6 +175,12 @@ available and their functions if you are not sure how to use this app.
         elif command.lower().startswith("show "):
             name = command[5:]
             show(name)
+        elif command.lower().startswith("xp "):
+            if command.lower() == "xp all":
+                export_all()
+            else:
+                name = command[3:]
+                export(name)
         elif command.lower() == "help" or command.lower() == "h":
             help_prompt()
         elif command.lower() == "quit":
