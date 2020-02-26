@@ -10,7 +10,7 @@ givers = []
 recipients = []
 secret_santa = {}
 
-#POPULATE command, see help()
+#POPULATE command, see help_prompt()
 def populate():
     global participants
     participants.clear()
@@ -34,7 +34,7 @@ def populate():
         print(i, end = " ")
     print()
 
-#POOL command, see help()
+#POOL command, see help_prompt()
 def pool():
     global participants
     print("\nYou have the following people listed as participants: ")
@@ -42,7 +42,7 @@ def pool():
         print(i, end = " ")
     print()
 
-#ADD command, see help()
+#ADD command, see help_prompt()
 def add(name):
     global participants
     add_participant = name
@@ -54,7 +54,7 @@ def add(name):
         txt = "{} is already on the list (no duplicate names allowed)."
         print(txt.format(add_participant))
 
-#RM command, see help()
+#RM command, see help_prompt()
 def remove(name):
     global participants
     rm_participant = name
@@ -66,7 +66,7 @@ def remove(name):
         txt = "You couldn't remove {} because they were not in the list."
         print(txt.format(rm_participant))
 
-#ASSIGN command, see help()
+#ASSIGN command, see help_prompt()
 def assign():
     global participants, secret_santa, givers, recipients
     
@@ -91,13 +91,13 @@ def assign():
 def peak():
     print(secret_santa)
 
-#SHOW command, see help()
+#SHOW command, see help_prompt()
 def show(giver):
     recipient = secret_santa.get(giver)
     txt = "{} is getting gifts for {}, they are {}'s secret Santa!"
     print(txt.format(giver, recipient, recipient))
 
-#XP command, see help()
+#XP command, see help_prompt()
 def export(giver):
     recipient = secret_santa.get(giver)
     txt = "Hi {}, you will be buying gifts for {}!"
@@ -106,7 +106,7 @@ def export(giver):
     ss_file.write(txt.format(giver, recipient))
     ss_file.close()
 
-#ALL option for the XP command, see help()
+#ALL option for the XP command, see help_prompt()
 def export_all():
     txt = "Hi {}, you will be buying gifts for {}!"
     
