@@ -109,7 +109,7 @@ def export(giver):
     recipient = secret_santa.get(giver)
     txt = "Hi {}, you will be buying gifts for {}!"
     
-    ss_file = open(str(giver, ".txt"), "w")
+    ss_file = open(giver, "w")
     ss_file.write(txt.format(giver, recipient))
     ss_file.close()
 
