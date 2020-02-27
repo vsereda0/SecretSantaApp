@@ -12,8 +12,10 @@ secret_santa = {}
 
 #POPULATE command, see help_prompt()
 def populate():
-    global participants
+    global participants, secret_santa, givers, recipients
+
     participants.clear()
+    secret_santa.clear()
 
     try:
         count = int(input("\nPlease enter the number of participants: "))
@@ -28,6 +30,8 @@ def populate():
             break
         else:
             participants.append(participant)
+
+    assign()
 
     print("\nYou have the following people listed as participants: ")
     for i in participants:
@@ -45,26 +49,29 @@ def pool():
 #ADD command, see help_prompt()
 def add(name):
     global participants
-    add_participant = name
-    if add_participant not in participants:
-        participants.append(add_participant)
+    
+    if name not in participants:
+        participants.append(name)
+        assign()
         txt = "You have added {} to the list of participants."
-        print(txt.format(add_participant))
+        print(txt.format(name))
     else:
         txt = "{} is already on the list (no duplicate names allowed)."
-        print(txt.format(add_participant))
+        print(txt.format(name))
 
 #RM command, see help_prompt()
 def remove(name):
-    global participants
-    rm_participant = name
-    if rm_participant in participants:
-        participants.remove(rm_participant)
+    global participants, secret_santa
+    
+    if name in participants:
+        participants.remove(name)
+        secret_santa.clear()
+        assign()
         txt = "You have removed {} from the list of participants."
-        print(txt.format(rm_participant))
+        print(txt.format(name))
     else:
         txt = "You couldn't remove {} because they were not in the list."
-        print(txt.format(rm_participant))
+        print(txt.format(name))
 
 #ASSIGN command, see help_prompt()
 def assign():
@@ -102,7 +109,7 @@ def export(giver):
     recipient = secret_santa.get(giver)
     txt = "Hi {}, you will be buying gifts for {}!"
     
-    ss_file = open(str(giver), "w")
+    ss_file = open(str(giver, ".txt"), "w")
     ss_file.write(txt.format(giver, recipient))
     ss_file.close()
 
@@ -112,8 +119,7 @@ def export_all():
     
     for giver, recipient in secret_santa.items():
         recipient = secret_santa.get(giver)
-        
-        ss_file = open(str(giver), "w")
+        ss_file = open(giver, "w")
         ss_file.write(txt.format(giver, recipient))
         ss_file.close()
 
@@ -122,12 +128,8 @@ def help_prompt():
     print("""
 The recommended process for using this app is:
 1. Use POPULATE to enter a list of participants for your secret Santa party.
-2. Use ASSIGN command to assign everyone their secret Santa.
-3. Have participants use the SHOW command to find out who they're getting gifts for.
-
-- If you make any edits to the participant pool (POPULATE, ADD, REMOVE) *after* you've 
-already used the ASSIGN command, you will have to run the ASSIGN command again in order 
-for your updates to be reflected in the final outcome. 
+2. Use XP ALL to create an output file for each participant that will tell them who
+    they're buying gifts for.
 
 
 These are the current commands (and their aliases, if applicable) that you can use:
@@ -139,7 +141,6 @@ POPULATE        (POP)   - Will prompt you to enter all the info to populate your
 POOL            (PL)    - Will allow you to see who is currently in your secret Santa pool.
 ADD [name]              - Will allow you to add an individual to your secret Santa pool.
 RM [name]               - Will allow you to remove an individual from your secret Santa pool.
-ASSIGN          (SS)    - Will process your list of participants and assign everyone a secret Santa.
 SHOW [name]             - Will show who the indicated participant is getting gifts for.
 XP [all, name]          - Will export the secret Santa assignment(s) based on the option used.
                             - Using "XP ALL" will create output files for every participant.
@@ -151,7 +152,6 @@ QUIT                    - Will end the application.
 def main():
     print("""
 Welcome to my Secret Santa App!
-
 I recommend using the HELP command to get a complete list of all commands 
 available and their functions if you are not sure how to use this app.
 """)
@@ -168,8 +168,6 @@ available and their functions if you are not sure how to use this app.
         elif command.lower().startswith("rm "):
             name = command[3:]
             remove(name)
-        elif command.lower() == "assign" or command.lower() == "ss":
-            assign()
         elif command.lower() == "peak":
             peak()
         elif command.lower().startswith("show "):
