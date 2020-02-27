@@ -32,11 +32,7 @@ def populate():
             participants.append(participant)
 
     assign()
-
-    print("\nYou have the following people listed as participants: ")
-    for i in participants:
-        print(i, end = " ")
-    print()
+    pool()
 
 #POOL command, see help_prompt()
 def pool():
