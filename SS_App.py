@@ -16,12 +16,15 @@ def populate():
 
     participants.clear()
     secret_santa.clear()
-
-    try:
-        count = int(input("\nPlease enter the number of participants: "))
-    except ValueError:
-        print("Enter a valid integer.")
-        count = int(input("\nPlease enter the number of participants: "))
+    
+    while True:
+        try:
+            count = int(input("\nPlease enter the number of participants: "))
+        except ValueError:
+            print("Enter a valid integer.")
+            continue
+        else:
+            break
 
     for i in range(count):
         txt = "Please enter the name of participant #{}: "
@@ -126,10 +129,7 @@ The recommended process for using this app is:
 1. Use POPULATE to enter a list of participants for your secret Santa party.
 2. Use XP ALL to create an output file for each participant that will tell them who
     they're buying gifts for.
-
-
 These are the current commands (and their aliases, if applicable) that you can use:
-
 POPULATE        (POP)   - Will prompt you to enter all the info to populate your secret Santa pool.
                              - This command overwrites all previous information entered.
                              - Enter "QUIT" if you would like to go back to the command line during
